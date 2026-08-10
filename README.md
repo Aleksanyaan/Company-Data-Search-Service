@@ -12,14 +12,36 @@ returns everything as structured JSON.
 - PostgreSQL 16 (installed locally, or run via Docker — see below)
 
 ### 1. Set up the database
-```sql
+
+Connect as the Postgres superuser:
+```bash
 psql -U postgres
+```
+
+Create the database and app user:
+```sql
 CREATE DATABASE companysearch;
 CREATE USER companysearch WITH PASSWORD 'companysearch';
 GRANT ALL PRIVILEGES ON DATABASE companysearch TO companysearch;
+```
+
+**Important — this next step is required, not optional.** On PostgreSQL 15+, granting
+privileges on the *database* does not automatically grant privileges on the `public` *schema*
+inside it. Without this, Spring Boot/Hibernate will fail on startup with
+`permission denied for schema public`. Connect to the new database specifically, then grant
+schema-level access:
+```sql
+\c companysearch
 GRANT ALL ON SCHEMA public TO companysearch;
 GRANT CREATE ON SCHEMA public TO companysearch;
 ```
+
+You can confirm it worked with:
+```sql
+\dn+
+```
+You should see `companysearch=UC` listed under the `public` schema's access privileges. If it's
+missing, table creation on app startup will fail.
 
 
 ### 2. Configure `src/main/resources/application.yaml`
