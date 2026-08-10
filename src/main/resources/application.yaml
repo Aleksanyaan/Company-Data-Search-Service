@@ -1,0 +1,21 @@
+spring:
+  application:
+    name: data-search
+  datasource:
+    url: jdbc:postgresql://localhost:5432/companysearch
+    driver-class-name: org.postgresql.Driver
+    username: companysearch
+    password: companysearch
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+  companies-house:
+    base-url: https://find-and-update.company-information.service.gov.uk
+    user-agent: "CompanySearchService/1.0 (contact: alexanyan.jenya@gmail.com)"
+    request-delay-ms: 500
+    max-companies-per-query: 100
+    connect-timeout-ms: 10000
+    search-cache-ttl-hours: 24
+    company-cache-ttl-hours: 168
